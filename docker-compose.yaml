@@ -1,0 +1,31 @@
+version: '3.7'
+
+services:
+  app:
+    build:
+      context: . 
+      dockerfile: docker/deploy/Dockerfile
+    restart: unless-stopped
+    depends_on:
+      - mysql
+    command: sh -c "./wait && ./bin/app"
+    ports:
+      - 3000:3000
+    environment:
+      - WAIT_HOSTS=mysql:3306
+      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_SLEEP_INTERVAL=10
+      - WAIT_HOST_CONNECT_TIMEOUT=10
+
+  mysql:
+    image: mysql:5.7
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: database
+      MYSQL_USER: user
+      MYSQL_PASSWORD: password
+    ports:
+      - 3306:3306
+    volumes:
+      - "./docker/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql"

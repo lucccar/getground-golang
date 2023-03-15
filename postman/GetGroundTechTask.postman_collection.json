@@ -1,0 +1,591 @@
+{
+	"info": {
+		"_postman_id": "f0e8dbe7-efba-4d9a-9d4f-d92e650dcecb",
+		"name": "GetGround Tech Task",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "001 - Setup",
+			"item": [
+				{
+					"name": "Install Postman BDD",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"// \"install\" Postman BDD",
+									"postman.setGlobalVariable('postmanBDD', responseBody);",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									"// If the \"postman_bdd_path\" environment variable is set, then we'll use it.",
+									"// Otherwise, we'll default to the published version",
+									"if (!environment.postman_bdd_path) {",
+									"    postman.setGlobalVariable('postman_bdd_path', 'http://bigstickcarpet.com/postman-bdd/dist/postman-bdd.min.js');",
+									"}",
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{postman_bdd_path}}",
+							"host": [
+								"{{postman_bdd_path}}"
+							]
+						}
+					},
+					"response": []
+				}
+			],
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"type": "text/javascript",
+						"exec": [
+							""
+						]
+					}
+				}
+			]
+		},
+		{
+			"name": "002 - Before Party",
+			"item": [
+				{
+					"name": "Add table",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(globals.postmanBDD);",
+									"",
+									"describe('Add table', function() {",
+									"    it('should be a successful json response', () => {",
+									"        response.ok.should.be.true;",
+									"        response.should.have.status(200);",
+									"        response.should.be.json;",
+									"    });",
+									"",
+									"    it('should return id and capacity in the response', () => {",
+									"        var table = response.body;",
+									"        table.capacity.should.equal(10);",
+									"        table.should.have.property(\"id\").and.to.exist;",
+									"        ",
+									"        postman.setEnvironmentVariable(\"table_id\", table.id);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"capacity\": 10\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/tables",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"tables"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add guest to guestlist",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(globals.postmanBDD);",
+									"",
+									"describe('Add guest to guestlist', function() {",
+									"    it('should be a successful json response', () => {",
+									"        response.ok.should.be.true;",
+									"        response.should.have.status(200);",
+									"        response.should.be.json;",
+									"    });",
+									"",
+									"    it('should return the name in the response', () => {",
+									"        var guest = response.body;",
+									"        guest.name.should.equal(\"john\");",
+									"    });",
+									"});",
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"table\": {{table_id}},\n    \"accompanying_guests\": 1\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/guest_list/john",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"guest_list",
+								"john"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Add john to guestlist",
+							"originalRequest": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Content-Type",
+										"name": "Content-Type",
+										"value": "application/json",
+										"type": "text"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"table\": 1,\n    \"accompanying_guests\": 1\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:3000/guest_list/john",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "3000",
+									"path": [
+										"guest_list",
+										"john"
+									]
+								}
+							},
+							"code": 201,
+							"_postman_previewlanguage": "json",
+							"header": null,
+							"cookie": [],
+							"body": "{\n    \"name\": \"john\"\n}"
+						}
+					]
+				},
+				{
+					"name": "Retrieve guest list",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(globals.postmanBDD);",
+									"",
+									"describe('Retrieve guest list', function() {",
+									"    it('should be a successful json response', () => {",
+									"        response.ok.should.be.true;",
+									"        response.should.have.status(200);",
+									"        response.should.be.json; ",
+									"    });",
+									"",
+									"    it('should have john in the response', () => {",
+									"        var john = response.body.guests[0]; ",
+									"        john.name.should.equal(\"john\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/guest_list",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"guest_list"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "Retrieve guest list",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://{{base_url}}/guest_list",
+									"protocol": "http",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"guest_list"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json; charset=UTF-8"
+								},
+								{
+									"key": "Date",
+									"value": "Tue, 24 May 2022 13:54:07 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "207"
+								}
+							],
+							"cookie": [],
+							"body": "[\n    {\n        \"name\": \"john\",\n        \"table\": 1,\n        \"accompanying_guests\": 1\n    }\n]"
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "003 - During Party",
+			"item": [
+				{
+					"name": "Check in guest",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(globals.postmanBDD);",
+									"",
+									"describe('Check in guest', function() {",
+									"    it('should be a successful json response', () => {",
+									"        response.ok.should.be.true;",
+									"        response.should.have.status(200);",
+									"        response.should.be.json; ",
+									"    });",
+									"",
+									"    it('should return the name in the response', () => {",
+									"        var guest = response.body;",
+									"        guest.name.should.equal(\"john\");",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"accompanying_guests\": 1\n}\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/guests/john",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"guests",
+								"john"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve checked in guests",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(globals.postmanBDD);",
+									"",
+									"describe('Retrieve checked in guests', function() {",
+									"    it('should be a successful json response', () => {",
+									"        response.ok.should.be.true;",
+									"        response.should.have.status(200);",
+									"        response.should.be.json; ",
+									"    });",
+									"",
+									"    it('should return the name in the response', () => {",
+									"        var john = response.body.guests[0]; ",
+									"        john.name.should.equal(\"john\");",
+									"        john.accompanying_guests.should.equal(1);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/guests",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"guests"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Retrieve empty seats",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(globals.postmanBDD);",
+									"",
+									"describe('Retrieve empty seats', function() {",
+									"    it('should be a successful json response', () => {",
+									"        response.ok.should.be.true;",
+									"        response.should.have.status(200);",
+									"        response.should.be.json; ",
+									"    });",
+									"",
+									"    it('seats empty should be 8', () => { ",
+									"        response.body.seats_empty.should.equal(8);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:3000/seats_empty",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"seats_empty"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Check out guest",
+					"event": [
+						{
+							"listen": "prerequest",
+							"script": {
+								"exec": [
+									""
+								],
+								"type": "text/javascript"
+							}
+						},
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"eval(globals.postmanBDD);",
+									"",
+									"describe('Check out guest', function() {",
+									"    it('should be a successful json response', () => {",
+									"        response.ok.should.be.true;",
+									"        response.should.have.status(204);",
+									"    });",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:3000/guests/john",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "3000",
+							"path": [
+								"guests",
+								"john"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "localhost:3000"
+		}
+	]
+}
