@@ -66,7 +66,12 @@ func main() {
 
 	router.HandleFunc("/tables", controller.AddTable).Methods("POST")
 	router.HandleFunc("/guest_list/{name}", controller.AddGuests).Methods("POST")
-	router.HandleFunc("/guest_list", controller.GetGuests).Methods("GET")
+	router.HandleFunc("/guest_list", controller.GetGuestList).Methods("GET")
+	router.HandleFunc("/guests/{name}", controller.GuestArrives).Methods("PUT")
+	router.HandleFunc("/guests/{name}", controller.GuestLeaves).Methods("DELETE")
+	router.HandleFunc("/guests", controller.GetArrivedGuests).Methods("GET")
+	router.HandleFunc("/seats_empty", controller.GetSeatsEmpty).Methods("GET")
+
 
 	http.Handle("/", router)
 	fmt.Println("Connected to port 3000")

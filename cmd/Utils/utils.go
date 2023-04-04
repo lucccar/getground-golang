@@ -18,3 +18,5 @@ func GenerateID() (int64, error) {
 	id := node.Generate().Int64()
 	return id, nil
 }
+
+

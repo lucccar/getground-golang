@@ -1,7 +1,7 @@
 version: '3.7'
 
 services:
-  app:
+  goapp:
     build:
       context: . 
       dockerfile: docker/deploy/Dockerfile
@@ -13,19 +13,24 @@ services:
       - 3000:3000
     environment:
       - WAIT_HOSTS=mysql:3306
-      - WAIT_HOSTS_TIMEOUT=300
+      - WAIT_HOSTS_TIMEOUT=20000
       - WAIT_SLEEP_INTERVAL=10
-      - WAIT_HOST_CONNECT_TIMEOUT=10
+      - WAIT_HOST_CONNECT_TIMEOUT=2000
+      - DB_USER=mysql
+      - DB_PASSWORD=root
+      - DB_HOST=mysql
+      - DB_NAME=mysql-docker
+      - DB_PORT=3306
 
   mysql:
     image: mysql:5.7
     restart: unless-stopped
     environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: database
-      MYSQL_USER: user
-      MYSQL_PASSWORD: password
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: mysql
+      MYSQL_PASSWORD: root
+      MYSQL_DATABASE: mysql-docker
     ports:
-      - 3306:3306
+      - 3307:3306
     volumes:
       - "./docker/mysql/dump.sql:/docker-entrypoint-initdb.d/dump.sql"
